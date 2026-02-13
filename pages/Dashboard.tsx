@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ShoppingBag, 
   TrendingUp, 
@@ -8,7 +8,8 @@ import {
   ExternalLink, 
   Download,
   AlertCircle,
-  Play
+  Play,
+  Check
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -24,6 +25,33 @@ const data = [
 
 const Dashboard: React.FC = () => {
   const smsBalance = 0; // Simulated empty balance for warning
+  const [copied, setCopied] = useState(false);
+  const sellerSlug = 'sarah-boutique';
+  const storeUrl = `https://qwikorder.com/store/${sellerSlug}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(storeUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownloadQR = async () => {
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(storeUrl)}`;
+    try {
+      const response = await fetch(qrUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `qwikorder-${sellerSlug}-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download QR code', error);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -99,24 +127,42 @@ const Dashboard: React.FC = () => {
             <h3 className="text-lg font-bold mb-4">Your Live Link</h3>
             <p className="text-white/80 text-sm mb-6 leading-relaxed">Share this link in your social bios during live sessions to capture orders automatically.</p>
             <div className="bg-white/10 p-4 rounded-2xl border border-white/20 mb-6 font-mono text-sm break-all">
-              qwikorder.com/store/sarah-boutique
+              {storeUrl.replace('https://', '')}
             </div>
             <div className="flex space-x-2">
-              <button className="flex-1 bg-white text-primary py-3 rounded-xl font-bold flex items-center justify-center space-x-2 hover:bg-opacity-90 transition-all">
-                <ExternalLink size={18} />
-                <span>Copy Link</span>
+              <button 
+                onClick={handleCopyLink}
+                className="flex-1 bg-white text-primary py-3 rounded-xl font-bold flex items-center justify-center space-x-2 hover:bg-opacity-90 transition-all"
+              >
+                {copied ? <Check size={18} /> : <ExternalLink size={18} />}
+                <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
-              <button className="w-12 h-12 bg-white text-primary rounded-xl flex items-center justify-center hover:bg-opacity-90 transition-all">
+              <button 
+                onClick={handleDownloadQR}
+                className="w-12 h-12 bg-white text-primary rounded-xl flex items-center justify-center hover:bg-opacity-90 transition-all"
+              >
                 <Download size={20} />
               </button>
             </div>
           </div>
           
           <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm text-center">
-             <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl mx-auto flex items-center justify-center mb-4">
-               <p className="text-gray-400 text-sm">QR Code<br/>Generator</p>
+             <div className="w-40 h-40 bg-white border border-gray-100 rounded-3xl mx-auto flex items-center justify-center mb-4 overflow-hidden p-3 group relative">
+               <img 
+                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(storeUrl)}`} 
+                 alt="Store QR Code" 
+                 className="w-full h-full object-contain"
+               />
+               <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                 <p className="text-[10px] font-bold text-dark uppercase tracking-widest bg-white/90 px-3 py-1 rounded-full shadow-sm">Storefront QR</p>
+               </div>
              </div>
-             <button className="text-primary font-bold hover:underline">Download Shop QR</button>
+             <button 
+               onClick={handleDownloadQR}
+               className="text-primary font-bold hover:underline"
+             >
+               Download Shop QR
+             </button>
           </div>
         </div>
       </div>
