@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Search, MapPin, Phone, ExternalLink, CheckCircle2, Truck, Image as ImageIcon } from 'lucide-react';
-import { Order, OrderStatus } from '../types';
+import { Order, OrderStatus } from '../types.ts';
 
 const mockOrders: Order[] = [
   {

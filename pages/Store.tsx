@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, Minus, Plus, Upload, ShieldCheck, MapPin } from 'lucide-react';
-import { Product } from '../types';
+import { Product } from '../types.ts';
 
 const mockProducts: Product[] = [
   { id: '1', name: 'Silk Floral Summer Dress', price: 250, stock: 12, safetyBuffer: 2, image: 'https://picsum.photos/400/500?random=1' },
@@ -27,10 +27,8 @@ const Store: React.FC = () => {
     });
   };
 
-  // Fix: Explicitly type the reduce generic to ensure the result is a number
   const cartCount = Object.values(cart).reduce<number>((a, b) => a + (b as number), 0);
   
-  // Fix: Explicitly type the reduce generic to ensure the total amount is a number
   const totalAmount = Object.entries(cart).reduce<number>((sum, [id, qty]) => {
     const p = mockProducts.find(p => p.id === id);
     const quantity = qty as number;

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Search, Download, ExternalLink, ChevronRight } from 'lucide-react';
-import { Customer } from '../types';
+import { Search, Download, ChevronRight } from 'lucide-react';
+import { Customer } from '../types.ts';
 
 const mockCustomers: Customer[] = [
   { id: '1', name: 'Kofi Mensah', phone: '024 123 4567', address: 'Adenta, Accra', orderCount: 5, totalSpent: 1250 },

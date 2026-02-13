@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Plus, Search, Edit2, MoreVertical, LayoutGrid, List } from 'lucide-react';
-import { Product } from '../types';
+import { Product } from '../types.ts';
 
 const mockProducts: Product[] = [
   { id: '1', name: 'Silk Floral Summer Dress', price: 250, stock: 12, safetyBuffer: 2, image: 'https://picsum.photos/400/500?random=1' },

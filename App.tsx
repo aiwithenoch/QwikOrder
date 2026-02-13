@@ -1,16 +1,16 @@
 
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Products from './pages/Products';
-import Orders from './pages/Orders';
-import Customers from './pages/Customers';
-import Billing from './pages/Billing';
-import Store from './pages/Store';
-import Layout from './components/Layout';
+import Landing from './pages/Landing.tsx';
+import Login from './pages/Login.tsx';
+import Signup from './pages/Signup.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import Products from './pages/Products.tsx';
+import Orders from './pages/Orders.tsx';
+import Customers from './pages/Customers.tsx';
+import Billing from './pages/Billing.tsx';
+import Store from './pages/Store.tsx';
+import Layout from './components/Layout.tsx';
 
 const App: React.FC = () => {
   return (

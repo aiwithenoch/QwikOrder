@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { CreditCard, Zap, MessageSquare, Check } from 'lucide-react';
-import { SMSBundle } from '../types';
+import { Zap, MessageSquare, Check } from 'lucide-react';
+import { SMSBundle } from '../types.ts';
 
 const bundles: SMSBundle[] = [
   { count: 200, price: 10 },
