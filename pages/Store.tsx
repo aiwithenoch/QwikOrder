@@ -27,11 +27,11 @@ const Store: React.FC = () => {
     });
   };
 
-  // Fixed: Added explicit types to prevent 'unknown' type operator errors
-  const cartCount = Object.values(cart).reduce((a: number, b: number) => a + b, 0);
+  // Fix: Explicitly type the reduce generic to ensure the result is a number
+  const cartCount = Object.values(cart).reduce<number>((a, b) => a + (b as number), 0);
   
-  // Fixed: Added explicit types to ensure arithmetic operation is valid with correctly typed quantity
-  const totalAmount = Object.entries(cart).reduce((sum: number, [id, qty]) => {
+  // Fix: Explicitly type the reduce generic to ensure the total amount is a number
+  const totalAmount = Object.entries(cart).reduce<number>((sum, [id, qty]) => {
     const p = mockProducts.find(p => p.id === id);
     const quantity = qty as number;
     return sum + (p ? p.price * quantity : 0);

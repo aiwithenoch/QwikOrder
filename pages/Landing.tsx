@@ -11,7 +11,7 @@ const Landing: React.FC = () => {
         <div className="text-2xl font-bold text-primary">QwikOrder</div>
         <div className="space-x-4">
           <Link to="/login" className="text-dark font-medium hover:text-primary transition-colors">Login</Link>
-          <Link to="/signup" className="bg-primary text-white px-5 py-2.5 rounded-xl font-medium shadow-sm hover:opacity-90 transition-all">Start Free</Link>
+          <Link to="/signup" className="bg-primary text-white px-5 py-2.5 rounded-xl font-medium shadow-sm hover:opacity-90 transition-all">Sign Up</Link>
         </div>
       </nav>
 
@@ -27,11 +27,11 @@ const Landing: React.FC = () => {
         <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl">
           Sell fast. No endless DMs. Just drop your link, capture orders, and verify payments in one clean dashboard.
         </p>
-        <Link to="/signup" className="bg-primary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-green-200 hover:scale-105 transition-all flex items-center space-x-2">
+        <Link to="/signup" className="bg-primary text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-green-100 hover:scale-105 transition-all flex items-center space-x-2">
           <span>Get Started Now</span>
           <ArrowRight size={20} />
         </Link>
-        <p className="mt-4 text-sm text-gray-400">No credit card required to start.</p>
+        <p className="mt-4 text-sm text-gray-400">Scale your social business today.</p>
       </section>
 
       {/* Steps */}
@@ -75,7 +75,7 @@ const Landing: React.FC = () => {
               </li>
             ))}
           </ul>
-          <Link to="/signup" className="block w-full bg-primary text-white py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition-all">Start Free Trial</Link>
+          <Link to="/signup" className="block w-full bg-primary text-white py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition-all">Get Started Now</Link>
         </div>
       </section>
 

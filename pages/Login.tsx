@@ -26,7 +26,7 @@ const Login: React.FC = () => {
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          Don't have an account? <Link to="/signup" className="text-primary font-bold">Sign Up Free</Link>
+          Don't have an account? <Link to="/signup" className="text-primary font-bold">Sign Up</Link>
         </p>
       </div>
     </div>
