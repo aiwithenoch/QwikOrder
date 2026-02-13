@@ -1,0 +1,7 @@
+{
+  "name": "QwikOrder",
+  "description": "A clean, efficient order capture system for social sellers in Ghana. Turn your Live viewers into instant orders with zero friction.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
