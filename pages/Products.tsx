@@ -8,6 +8,8 @@ const mockProducts: Product[] = [
   { id: '2', name: 'Vintage Leather Handbag', price: 180, stock: 5, safetyBuffer: 1, image: 'https://picsum.photos/400/500?random=2' },
   { id: '3', name: 'Minimalist Gold Hoops', price: 85, stock: 45, safetyBuffer: 5, image: 'https://picsum.photos/400/500?random=3' },
   { id: '4', name: 'Linen Wide-Leg Trousers', price: 150, stock: 0, safetyBuffer: 2, image: 'https://picsum.photos/400/500?random=4' },
+  { id: '5', name: 'Oversized Denim Jacket', price: 320, stock: 8, safetyBuffer: 1, image: 'https://picsum.photos/400/500?random=5' },
+  { id: '6', name: 'Canvas Tote Bag', price: 45, stock: 100, safetyBuffer: 10, image: 'https://picsum.photos/400/500?random=6' },
 ];
 
 const Products: React.FC = () => {
@@ -45,32 +47,32 @@ const Products: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* High Density Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
         {mockProducts.map((p) => (
-          <div key={p.id} className="group bg-white rounded-[32px] border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-100 transition-all">
-            <div className="relative aspect-[4/5] overflow-hidden">
+          <div key={p.id} className="group bg-white rounded-[24px] md:rounded-[32px] border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-100 transition-all">
+            <div className="relative aspect-square overflow-hidden bg-gray-50">
               <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               {p.stock === 0 && (
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Out of Stock</span>
+                  <span className="bg-red-500 text-white px-2 py-0.5 rounded-full text-[8px] md:text-xs font-bold uppercase tracking-widest">Out of Stock</span>
                 </div>
               )}
-              <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="p-2 bg-white/90 backdrop-blur rounded-xl text-dark shadow-sm hover:bg-white"><Edit2 size={16} /></button>
-                <button className="p-2 bg-white/90 backdrop-blur rounded-xl text-dark shadow-sm hover:bg-white"><MoreVertical size={16} /></button>
+              <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button className="p-1.5 bg-white/90 backdrop-blur rounded-lg text-dark shadow-sm hover:bg-white"><Edit2 size={14} /></button>
+                <button className="p-1.5 bg-white/90 backdrop-blur rounded-lg text-dark shadow-sm hover:bg-white"><MoreVertical size={14} /></button>
               </div>
             </div>
-            <div className="p-6">
-              <h4 className="font-bold text-dark mb-1 truncate">{p.name}</h4>
+            <div className="p-3 md:p-4">
+              <h4 className="font-bold text-dark text-xs md:text-sm mb-1 truncate">{p.name}</h4>
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-primary font-bold text-lg">GHS {p.price}</p>
-                  <p className="text-gray-400 text-xs mt-1">Stock: {p.stock} units</p>
+                  <p className="text-primary font-bold text-sm md:text-base">GHS {p.price}</p>
+                  <p className="text-gray-400 text-[10px] mt-0.5">Stock: {p.stock}</p>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase block mb-1">Safety Buffer</span>
-                  <span className="bg-gray-50 px-2 py-1 rounded-lg text-xs font-medium text-dark">{p.safetyBuffer} units</span>
+                <div className="text-right hidden sm:block">
+                  <span className="text-[8px] text-gray-400 font-bold uppercase block mb-0.5">Buffer</span>
+                  <span className="bg-gray-50 px-1.5 py-0.5 rounded-md text-[10px] font-medium text-dark">{p.safetyBuffer}</span>
                 </div>
               </div>
             </div>
