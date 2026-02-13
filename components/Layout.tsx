@@ -1,17 +1,20 @@
 
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Package, 
   ShoppingBag, 
   Users, 
   CreditCard,
-  LogOut
+  LogOut,
+  X
 } from 'lucide-react';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const navItems = [
     { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
@@ -22,6 +25,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = () => {
+    setShowLogoutConfirm(false);
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -49,10 +57,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </nav>
 
         <div className="p-4 border-t border-gray-50">
-          <Link to="/login" className="flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all">
+          <button 
+            onClick={() => setShowLogoutConfirm(true)}
+            className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"
+          >
             <LogOut size={20} />
             <span>Sign Out</span>
-          </Link>
+          </button>
         </div>
       </aside>
 
@@ -81,7 +92,56 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <span className="text-[10px] font-medium">{item.name}</span>
           </Link>
         ))}
+        {/* Mobile Logout Button */}
+        <button
+          onClick={() => setShowLogoutConfirm(true)}
+          className="flex flex-col items-center space-y-1 px-3 py-1 text-gray-400"
+        >
+          <LogOut size={20} />
+          <span className="text-[10px] font-medium">Exit</span>
+        </button>
       </nav>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div 
+            className="absolute inset-0 bg-dark/20 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setShowLogoutConfirm(false)}
+          />
+          <div className="relative bg-white w-full max-w-sm p-8 md:p-10 rounded-[40px] shadow-2xl animate-in zoom-in duration-200">
+            <button 
+              onClick={() => setShowLogoutConfirm(false)}
+              className="absolute top-6 right-6 p-2 text-gray-300 hover:text-dark transition-colors"
+            >
+              <X size={20} />
+            </button>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <LogOut size={28} />
+              </div>
+              <h3 className="text-2xl font-bold text-dark mb-2">Sign Out?</h3>
+              <p className="text-gray-500 mb-8 leading-relaxed">
+                Are you sure you want to end your current session? You'll need to log back in to manage your orders.
+              </p>
+              <div className="flex flex-col space-y-3">
+                <button 
+                  onClick={handleLogout}
+                  className="w-full bg-red-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-100 hover:bg-red-600 transition-all"
+                >
+                  Confirm Sign Out
+                </button>
+                <button 
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="w-full py-4 text-gray-400 font-bold hover:text-dark transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
