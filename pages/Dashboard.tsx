@@ -55,13 +55,22 @@ const Dashboard: React.FC = () => {
 
     setProfile(profileData);
 
-    // Fetch stats (Mocked for now until orders are populated)
-    // In real app, we'd do a count/sum on orders table
-    setStats({
-      orders: 0,
-      revenue: 0,
-      pending: 0,
-    });
+    // Fetch real stats
+    const { data: ordersData } = await supabase
+      .from('orders')
+      .select('total_amount, order_status')
+      .eq('seller_id', user.id);
+
+    if (ordersData) {
+      const revenue = ordersData.reduce((acc, curr) => acc + (curr.total_amount || 0), 0);
+      const pendingCount = ordersData.filter(o => o.order_status === 'new').length;
+
+      setStats({
+        orders: ordersData.length,
+        revenue: revenue,
+        pending: pendingCount,
+      });
+    }
 
     setLoading(false);
   };

@@ -18,16 +18,21 @@ const Store: React.FC = () => {
   }, [sellerSlug]);
 
   const fetchStoreData = async () => {
-    // In a real app, you'd lookup by a slug field.
-    // For now, we'll assume the slug matches the business_name conceptually
-    // and just fetch the first active seller for demo if not found.
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .limit(1)
-      .single();
+    if (!sellerSlug) return;
 
-    if (profile) {
+    try {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('slug', sellerSlug)
+        .single();
+
+      if (profileError || !profile) {
+        console.error("Store not found:", profileError);
+        setLoading(false);
+        return;
+      }
+
       setSeller(profile);
       const { data: productsData } = await supabase
         .from('products')
@@ -37,8 +42,11 @@ const Store: React.FC = () => {
         .gt('stock', 0);
 
       if (productsData) setProducts(productsData);
+    } catch (err) {
+      console.error("Error fetching store data:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const updateQuantity = (id: string, delta: number) => {

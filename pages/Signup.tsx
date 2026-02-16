@@ -19,13 +19,16 @@ const Signup: React.FC = () => {
     const shopName = formData.get('shopName') as string;
     const phone = formData.get('phone') as string;
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const slug = shopName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           business_name: shopName,
           phone: phone,
+          business_slug: slug, // Add slug to user metadata
         },
       },
     });
@@ -33,6 +36,25 @@ const Signup: React.FC = () => {
     if (signUpError) {
       setError(signUpError.message);
       setLoading(false);
+    } else if (data?.user) {
+      // If user is successfully created, insert into profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: data.user.id,
+          business_name: shopName,
+          phone: phone,
+          slug: slug
+        });
+
+      if (profileError) {
+        setError(profileError.message);
+        setLoading(false);
+        // Optionally, you might want to delete the user created by auth.signUp here
+        // if the profile creation fails, to prevent orphaned user accounts.
+      } else {
+        navigate('/dashboard');
+      }
     } else {
       navigate('/dashboard');
     }
