@@ -81,7 +81,7 @@ const Landing: React.FC = () => {
 
       {/* Footer */}
       <footer className="max-w-7xl mx-auto px-6 py-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400 space-y-4 md:space-y-0">
-        <div>© 2024 QwikOrder. Built for speed.</div>
+        <div>© {new Date().getFullYear()} QwikOrder. Built for speed. Riverside Ai</div>
         <div className="flex space-x-6">
           <a href="#" className="hover:text-primary">Privacy Policy</a>
           <a href="#" className="hover:text-primary">Terms of Service</a>
