@@ -113,11 +113,11 @@ const Store: React.FC = () => {
     setStep('done');
   };
 
-  const cartCount = Object.values(cart).reduce<number>((a, b) => a + (b as number), 0);
+  const cartCount = Object.values(cart).reduce<number>((a, b) => a + (Number(b)), 0);
 
   const totalAmount = Object.entries(cart).reduce<number>((sum, [id, qty]) => {
     const p = products.find(p => p.id === id);
-    return sum + (p ? p.price * qty : 0);
+    return sum + (p ? (Number(p.price) * (qty as number)) : 0);
   }, 0);
 
   const formatSlug = (slug: string = '') => slug.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
