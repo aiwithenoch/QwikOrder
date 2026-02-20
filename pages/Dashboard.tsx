@@ -1,81 +1,32 @@
 
-import React, { useState, useEffect } from 'react';
-import {
-  ShoppingBag,
-  TrendingUp,
-  Clock,
-  MessageSquare,
-  ExternalLink,
+import React, { useState } from 'react';
+import { 
+  ShoppingBag, 
+  TrendingUp, 
+  Clock, 
+  MessageSquare, 
+  ExternalLink, 
   Download,
   AlertCircle,
   Play,
   Check
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { supabase } from '../supabase.ts';
-import { useNavigate } from 'react-router-dom';
+
+const data = [
+  { name: 'Mon', revenue: 400 },
+  { name: 'Tue', revenue: 300 },
+  { name: 'Wed', revenue: 1200 },
+  { name: 'Thu', revenue: 800 },
+  { name: 'Fri', revenue: 1600 },
+  { name: 'Sat', revenue: 2100 },
+  { name: 'Sun', revenue: 1800 },
+];
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<any>(null);
-  const [stats, setStats] = useState({
-    orders: 0,
-    revenue: 0,
-    pending: 0,
-  });
+  const smsBalance = 0; // Simulated empty balance for warning
   const [copied, setCopied] = useState(false);
-  const [chartData, setChartData] = useState([
-    { name: 'Mon', revenue: 0 },
-    { name: 'Tue', revenue: 0 },
-    { name: 'Wed', revenue: 0 },
-    { name: 'Thu', revenue: 0 },
-    { name: 'Fri', revenue: 0 },
-    { name: 'Sat', revenue: 0 },
-    { name: 'Sun', revenue: 0 },
-  ]);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
-    // Fetch profile
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-
-    setProfile(profileData);
-
-    // Fetch real stats
-    const { data: ordersData } = await supabase
-      .from('orders')
-      .select('total_amount, order_status')
-      .eq('seller_id', user.id);
-
-    if (ordersData) {
-      const revenue = ordersData.reduce((acc, curr) => acc + (curr.total_amount || 0), 0);
-      const pendingCount = ordersData.filter(o => o.order_status === 'new').length;
-
-      setStats({
-        orders: ordersData.length,
-        revenue: revenue,
-        pending: pendingCount,
-      });
-    }
-
-    setLoading(false);
-  };
-
-  const sellerSlug = profile?.business_name?.toLowerCase().replace(/\s+/g, '-') || 'my-store';
+  const sellerSlug = 'sarah-boutique';
   const storeUrl = `https://qwikorder.com/store/${sellerSlug}`;
 
   const handleCopyLink = () => {
@@ -102,24 +53,22 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading your dashboard...</div>;
-
   return (
     <div className="space-y-8">
       {/* Header / SMS Warning */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-dark">Welcome back, {profile?.business_name}</h1>
+          <h1 className="text-3xl font-bold text-dark">Welcome back, Sarah</h1>
           <p className="text-gray-500">Here's what's happening today.</p>
         </div>
-
+        
         <button className="bg-primary text-white px-6 py-3 rounded-2xl font-bold flex items-center space-x-2 shadow-lg shadow-green-100 hover:scale-[1.02] transition-all">
           <Play size={18} fill="currentColor" />
           <span>Start Live Session</span>
         </button>
       </div>
 
-      {profile?.sms_balance === 0 && (
+      {smsBalance === 0 && (
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start space-x-4">
           <AlertCircle className="text-amber-600 shrink-0" size={24} />
           <div>
@@ -133,10 +82,10 @@ const Dashboard: React.FC = () => {
       {/* Grid Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Orders this week', value: stats.orders, icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
-          { label: 'Revenue this week', value: `GHS ${stats.revenue}`, icon: TrendingUp, color: 'text-primary', bg: 'bg-green-50' },
-          { label: 'Pending Payments', value: stats.pending, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
-          { label: 'SMS Remaining', value: profile?.sms_balance || 0, icon: MessageSquare, color: 'text-purple-600', bg: 'bg-purple-50' },
+          { label: 'Orders this week', value: '42', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Revenue this week', value: 'GHS 2,450', icon: TrendingUp, color: 'text-primary', bg: 'bg-green-50' },
+          { label: 'Pending Payments', value: '12', icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
+          { label: 'SMS Remaining', value: smsBalance, icon: MessageSquare, color: 'text-purple-600', bg: 'bg-purple-50' },
         ].map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
             <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-4`}>
@@ -154,18 +103,18 @@ const Dashboard: React.FC = () => {
           <h3 className="text-lg font-bold mb-8">Revenue Overview</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+              <AreaChart data={data}>
                 <defs>
                   <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0FA876" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#0FA876" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0FA876" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#0FA876" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 12}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 12}} />
+                <Tooltip 
+                  contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}}
                 />
                 <Area type="monotone" dataKey="revenue" stroke="#0FA876" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
               </AreaChart>
@@ -181,14 +130,14 @@ const Dashboard: React.FC = () => {
               {storeUrl.replace('https://', '')}
             </div>
             <div className="flex space-x-2">
-              <button
+              <button 
                 onClick={handleCopyLink}
                 className="flex-1 bg-white text-primary py-3 rounded-xl font-bold flex items-center justify-center space-x-2 hover:bg-opacity-90 transition-all"
               >
                 {copied ? <Check size={18} /> : <ExternalLink size={18} />}
                 <span>{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
-              <button
+              <button 
                 onClick={handleDownloadQR}
                 className="w-12 h-12 bg-white text-primary rounded-xl flex items-center justify-center hover:bg-opacity-90 transition-all"
               >
@@ -196,24 +145,24 @@ const Dashboard: React.FC = () => {
               </button>
             </div>
           </div>
-
+          
           <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm text-center">
-            <div className="w-40 h-40 bg-white border border-gray-100 rounded-3xl mx-auto flex items-center justify-center mb-4 overflow-hidden p-3 group relative">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(storeUrl)}`}
-                alt="Store QR Code"
-                className="w-full h-full object-contain"
-              />
-              <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                <p className="text-[10px] font-bold text-dark uppercase tracking-widest bg-white/90 px-3 py-1 rounded-full shadow-sm">Storefront QR</p>
-              </div>
-            </div>
-            <button
-              onClick={handleDownloadQR}
-              className="text-primary font-bold hover:underline"
-            >
-              Download Shop QR
-            </button>
+             <div className="w-40 h-40 bg-white border border-gray-100 rounded-3xl mx-auto flex items-center justify-center mb-4 overflow-hidden p-3 group relative">
+               <img 
+                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(storeUrl)}`} 
+                 alt="Store QR Code" 
+                 className="w-full h-full object-contain"
+               />
+               <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                 <p className="text-[10px] font-bold text-dark uppercase tracking-widest bg-white/90 px-3 py-1 rounded-full shadow-sm">Storefront QR</p>
+               </div>
+             </div>
+             <button 
+               onClick={handleDownloadQR}
+               className="text-primary font-bold hover:underline"
+             >
+               Download Shop QR
+             </button>
           </div>
         </div>
       </div>
